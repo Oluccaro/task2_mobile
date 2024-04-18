@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -13,6 +13,8 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -55,44 +57,48 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
+type ActionButtonProps = PropsWithChildren<{
+  text: String,
+}>;
+
+function actionButton(): React.JSX.Element{
+  
+  return(<></>)
+}
+
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const [count, setCount] = useState(0);
+  const [myNumber, setNumber] = useState('1');
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.label}>Escolha um número a somar ou subtrair:</Text>
+      <TextInput 
+        style={styles.inputNumber}
+        placeholder='Numero' 
+        keyboardType='numeric'
+        onChangeText={(value)=>setNumber(value)} 
+        value={myNumber}/>
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={()=>setCount(count+parseFloat(myNumber))}>
+        <Text
+          style={styles.buttonText}>
+          + {myNumber}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={()=>setCount(count-parseFloat(myNumber))}>
+        <Text style={styles.buttonText}>
+          - {myNumber}
+        </Text>
+      </TouchableOpacity>
+      <Text style={styles.label}>Total = {count}</Text>
+    </View>
   );
 }
 
@@ -113,6 +119,34 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+  container:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  inputNumber:{
+    height: 40,
+    width: '50%',
+    borderColor: 'gray',
+    borderWidth: 2,
+    textAlign: 'center'
+  },
+  button:{
+    backgroundColor: '#8a2be2',
+    marginTop: 10,
+    width:100
+  },
+  buttonText:{
+    textAlign: 'center',
+    padding: 20,
+    color: 'white',
+    fontSize:20
+  },
+  label:{
+    fontSize: 20, 
+    padding: 10
+  }
+
 });
 
 export default App;
